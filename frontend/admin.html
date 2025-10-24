@@ -76,6 +76,12 @@
       window.location.href = "index.html";
     }
 
+    function backHome() {
+        localStorage.removeItem("adminToken");
+        alert('Back to Home');
+        window.location.href = "index.html";
+    }
+
     // 🔹 Load daftar event
     async function loadEvents() {
       const res = await fetch(`${API_URL}/events`);
