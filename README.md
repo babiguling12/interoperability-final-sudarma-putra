@@ -38,6 +38,7 @@ sqlite3 campus_event.db
 .tables
 uvicorn main:app --reload
 
-##### Lihat Dokumentasi API
+```
+# Lihat Dokumentasi API
 [👉 Lihat Dokumentasi API](http://127.0.0.1:8000/docs)
 
