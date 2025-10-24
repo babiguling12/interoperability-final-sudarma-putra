@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Event Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
+    h1 { color: #0066cc; }
+    a, button {
+      display: block;
+      margin: 15px auto;
+      padding: 12px 25px;
+      width: 300px;
+      background-color: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    a:hover, button:hover { background-color: #004999; }
+    #adminLoginBox {
+      display: none;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 20px;
+      width: 300px;
+      margin: 20px auto;
+      border-radius: 8px;
+    }
+    input { padding: 8px; width: 90%; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🎓 Campus Event Registration Platform</h1>
+  <p>Pilih halaman yang ingin diakses:</p>
+
+  <a href="participant.html">🙋‍♂️ Participant - Register for Event</a>
+  <button onclick="showAdminLogin()">🧑‍💼 Admin Login</button>
+
+  <div id="adminLoginBox">
+    <h3>🔐 Admin Login</h3>
+    <input type="password" id="adminToken" placeholder="Enter admin token" />
+    <button onclick="loginAdmin()">Login</button>
+    <button onclick="hideAdminLogin()">Cancel</button>
+  </div>
+
+  <script>
+    function showAdminLogin() {
+      document.getElementById("adminLoginBox").style.display = "block";
+    }
+    function hideAdminLogin() {
+      document.getElementById("adminLoginBox").style.display = "none";
+    }
+
+    function loginAdmin() {
+      const token = document.getElementById("adminToken").value.trim();
+      if (token === "admin123") {
+        localStorage.setItem("adminToken", token);
+        alert("✅ Login successful!");
+        window.location.href = "admin.html";
+      } else {
+        alert("❌ Invalid token!");
+      }
+    }
+
+    // Auto redirect if admin already logged in
+    if (localStorage.getItem("adminToken")) {
+      const go = confirm("You are already logged in as admin. Go to Admin Dashboard?");
+      if (go) window.location.href = "admin.html";
+    }
+  </script>
+</body>
+</html>

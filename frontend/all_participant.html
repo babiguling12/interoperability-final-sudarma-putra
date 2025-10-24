@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - List of Participants</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin: 30px;
+      }
+      h1 {
+        color: #0066cc;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      button {
+        padding: 8px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Registered Participants</h1>
+
+    <button onclick="loadParticipants()">🔄 Refresh</button>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Event</th>
+        </tr>
+      </thead>
+      <tbody id="participantTable"></tbody>
+    </table>
+
+    <script>
+      const API_URL = "http://127.0.0.1:8000";
+
+      if (!localStorage.getItem("adminToken")) {
+        alert("⚠️ Please login as admin first!");
+        window.location.href = "index.html";
+      }
+
+      async function loadParticipants() {
+        const res = await fetch(`${API_URL}/participants`);
+        const data = await res.json();
+        const tbody = document.getElementById("participantTable");
+
+        if (data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4">No participants yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data
+          .map(
+            (p) => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.email}</td>
+          <td>${p.event_title}</td>
+        </tr>
+      `
+          )
+          .join("");
+      }
+
+      // load automatically
+      loadParticipants();
+    </script>
+  </body>
+</html>

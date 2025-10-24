@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Participant - Register for Event</title>
+  <style>
+    body { font-family: Arial; margin: 30px; }
+    h1 { color: #0066cc; }
+    .event { border: 1px solid #ccc; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+    input, button, select { padding: 8px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🙋‍♂️ Campus Event Registration</h1>
+  <a href="index.html">⬅️ Back to Home</a>
+
+  <h2>Available Events</h2>
+  <div id="event-list"></div>
+
+  <h2>Register for an Event</h2>
+  <form id="registerForm">
+    <input type="text" id="name" placeholder="Your Name" required><br>
+    <input type="email" id="email" placeholder="Your Email" required><br>
+    <select id="eventSelect" required>
+      <option value="">-- Select Event --</option>
+    </select><br>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+
+    // 🔹 Load events for both display and dropdown
+    async function loadEvents() {
+      const res = await fetch(`${API_URL}/events`);
+      const data = await res.json();
+
+      // tampilkan daftar event
+      const list = document.getElementById("event-list");
+      list.innerHTML = data.length
+        ? data.map(e => `
+          <div class="event">
+            <h3>${e.title}</h3>
+            <p><b>Date:</b> ${e.date}</p>
+            <p><b>Location:</b> ${e.location}</p>
+            <p><b>Quota:</b> ${e.quota}</p>
+          </div>
+        `).join("")
+        : "<p>No events available.</p>";
+
+      // isi dropdown
+      const select = document.getElementById("eventSelect");
+      select.innerHTML = `<option value="">-- Select Event --</option>` + 
+        data.map(e => `<option value="${e.id}">${e.title}</option>`).join("");
+    }
+
+    // 🔹 Handle form submit
+    document.getElementById("registerForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const event_id = document.getElementById("eventSelect").value;
+
+      if (!event_id) {
+        alert("⚠️ Please select an event first!");
+        return;
+      }
+
+      const res = await fetch(`${API_URL}/register?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&event_id=${event_id}`, {
+        method: "POST"
+      });
+
+      const msg = await res.json();
+      alert(msg.message);
+      e.target.reset();
+    });
+
+    loadEvents();
+  </script>
+</body>
+</html>
